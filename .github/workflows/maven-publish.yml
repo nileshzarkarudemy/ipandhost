@@ -12,12 +12,10 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
@@ -25,7 +23,14 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-
     - name: Build with Maven
       run: mvn clean install
-
+    - name: Build & push Docker image
+      uses: actions/checkout@v3
+      with:
+          image: nileshzarkar/ipandhost
+          tags: 1.0.0
+          registry: docker.io
+          dockerfile: Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
